@@ -25,6 +25,11 @@ struct GDDamageStatics
 	}
 };
 
+// To set up Attribute capture, we follow a pattern set by Epic's ActionRPG Sample Project by defining a struct holding and
+// defining how we capture the Attributes and creating one copy of it in the struct's constructor (MY NOTE: factory).
+// You will have a struct like this for every ExecCalc. Note: Each struct needs a unique name as they share the same namespace.
+// Using the same name for the structs will cause incorrect behavior in capturing your Attributes (mostly capturing the values
+// of the wrong Attributes).
 static const GDDamageStatics& DamageStatics()
 {
 	static GDDamageStatics DStatics;
