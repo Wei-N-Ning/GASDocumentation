@@ -96,6 +96,7 @@ void UAsyncTaskCooldownChanged::OnActiveGameplayEffectAddedCallback(UAbilitySyst
 
 void UAsyncTaskCooldownChanged::CooldownTagChanged(const FGameplayTag CooldownTag, int32 NewCount)
 {
+	GEngine->AddOnScreenDebugMessage(0, 2.0f, FColor::Green, FString::Printf(TEXT("CooldownTagChanged: %s NewCount: %d"), *CooldownTag.ToString(), NewCount));
 	if (NewCount == 0)
 	{
 		OnCooldownEnd.Broadcast(CooldownTag, -1.0f, -1.0f);
