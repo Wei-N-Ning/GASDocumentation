@@ -179,6 +179,9 @@ void UGDAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCall
 					if (SourceController != TargetController)
 					{
 						// Create a dynamic instant Gameplay Effect to give the bounties
+						// this event modifies the attribute xp and gold, triggering the corresponding events
+						// in the UI blueprint, the handler then updates the UI, setting the new values.
+						// (MY NOTE: this can be a lightweight, flexible approach to add UI update events to trivial attribute changes)
 						UGameplayEffect* GEBounty = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Bounty")));
 						GEBounty->DurationPolicy = EGameplayEffectDurationType::Instant;
 
