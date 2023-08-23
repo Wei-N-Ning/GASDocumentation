@@ -288,6 +288,10 @@ void AGDHeroCharacter::OnRep_PlayerState()
 		// For now assume possession = spawn/respawn.
 		InitializeAttributes();
 
+		// OnRep_PlayerState() is not sufficient by itself because there could be a case where the Actor's InputComponent
+		// could be null when PlayerState replicates before the PlayerController tells the client to call ClientRestart()
+		// which creates the InputComponent. The Sample Project demonstrates attempting to bind in both locations with a
+		// boolean gating the process so it only actually binds the input once.
 		AGDPlayerController* PC = Cast<AGDPlayerController>(GetController());
 		if (PC)
 		{
@@ -312,6 +316,10 @@ void AGDHeroCharacter::OnRep_PlayerState()
 
 void AGDHeroCharacter::BindASCInput()
 {
+	// Note: In the Sample Project Confirm and Cancel in the enum don't match the input action names in the project settings
+	// (ConfirmTarget and CancelTarget), but we supply the mapping between them in BindAbilityActivationToInputComponent().
+	// These are special since we supply the mapping and they don't have to match, but they can match. All other inputs in
+	// the enum must match the input action names in the project settings
 	if (!ASCInputBound && AbilitySystemComponent.IsValid() && IsValid(InputComponent))
 	{
 		FTopLevelAssetPath AbilityEnumAssetPath = FTopLevelAssetPath(FName("/Script/GASDocumentation"), FName("EGDAbilityInputID"));
