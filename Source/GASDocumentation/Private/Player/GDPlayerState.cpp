@@ -391,12 +391,17 @@ void AGDPlayerState::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 {
 	if (NewCount > 0)
 	{
+		// grab all the potentially activated abilities
 		FGameplayTagContainer AbilityTagsToCancel;
 		AbilityTagsToCancel.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability")));
 
 		FGameplayTagContainer AbilityTagsToIgnore;
 		AbilityTagsToIgnore.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.NotCanceledByStun")));
 
+		// cancel these potentially activated abilities (if ability is not activated, cancel is NO-OP)
+		// there is a version that cancels all
+		// /** Cancels all abilities regardless of tags. Will not cancel the ignore instance */
+		// void CancelAllAbilities(UGameplayAbility* Ignore=nullptr);
 		AbilitySystemComponent->CancelAbilities(&AbilityTagsToCancel, &AbilityTagsToIgnore);
 	}
 }

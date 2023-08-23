@@ -43,6 +43,20 @@ public:
 	virtual int32 GetAbilityLevel(EGDAbilityInputID AbilityID) const;
 
 	// Removes all CharacterAbilities. Can only be called by the Server. Removing on the Server will remove from Client too.
+	// Note:
+	// see: https://github.com/tranek/GASDocumentation#466-getting-active-abilities
+	// this is a good example of how to get all the activated (activatable) abilities from the ASC and remove them.
+	// you must search through an ASC's list of ActivatableAbilities (granted GameplayAbilities that the ASC owns) and find
+	// the one matching the Asset or Granted GameplayTag that you are looking for.
+	// UAbilitySystemComponent::GetActivatableAbilities() returns a TArray<FGameplayAbilitySpec> for you to iterate over.
+	//
+	// The ASC also has another helper function that takes in a GameplayTagContainer as a parameter to assist in searching
+	// instead of manually iterating over the list of GameplayAbilitySpecs. The bOnlyAbilitiesThatSatisfyTagRequirements
+	// parameter will only return GameplayAbilitySpecs that satisfy their GameplayTag requirements and could be activated
+	// right now. For example, you could have two basic attack GameplayAbilities, one with a weapon and one with bare fists,
+	// and the correct one activates depending on if a weapon is equipped setting the GameplayTag requirement. See Epic's
+	// comment on the function for more information.
+	// Once you get the FGameplayAbilitySpec that you are looking for, you can call IsActive() on it.
 	virtual void RemoveCharacterAbilities();
 
 	UFUNCTION(BlueprintCallable)
