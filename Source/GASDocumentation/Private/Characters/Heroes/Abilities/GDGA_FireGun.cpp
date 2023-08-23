@@ -31,10 +31,12 @@ void UGDGA_FireGun::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 
 	UAnimMontage* MontageToPlay = FireHipMontage;
 
+	Damage = 12.0f;
 	if (GetAbilitySystemComponentFromActorInfo()->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.AimDownSights"))) &&
 		!GetAbilitySystemComponentFromActorInfo()->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.AimDownSights.Removal"))))
 	{
 		MontageToPlay = FireIronsightsMontage;
+		Damage = 30.0f;
 	}
 
 	// Play fire montage and wait for event telling us to spawn the projectile
