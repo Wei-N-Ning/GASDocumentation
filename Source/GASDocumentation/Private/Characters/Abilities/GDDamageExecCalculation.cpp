@@ -40,6 +40,11 @@ UGDDamageExecCalculation::UGDDamageExecCalculation()
 {
 	RelevantAttributesToCapture.Add(DamageStatics().DamageDef);
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
+
+	// Sending data to execution calculation method 3
+	// Hardcode values to a GE (similar to method 2)
+	// The Temporary Variable is associated with a GameplayTag.
+	ValidTransientAggregatorIdentifiers.AddTag(FGameplayTag::RequestGameplayTag("Data.UberDamage"));
 }
 
 void UGDDamageExecCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters & ExecutionParams, OUT FGameplayEffectCustomExecutionOutput & OutExecutionOutput) const
@@ -66,8 +71,15 @@ void UGDDamageExecCalculation::Execute_Implementation(const FGameplayEffectCusto
 
 	float Damage = 0.0f;
 	// Capture optional damage value set on the damage GE as a CalculationModifier under the ExecutionCalculation
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DamageDef, EvaluationParameters, Damage);
+	// Sending data to execution calculation method 2 -
+	// modify the GE blueprint adding calculation modifiers; basically, hardcode a modifier to the captured attribute
+	//   if I hardcode +ADD 50 on the GE, here the damage will be increased by 50
+	//   here the ExecutionCalculation reads this value in when it captures the Attribute.
+	
 	// Add SetByCaller damage if it exists
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DamageDef, EvaluationParameters, Damage);
+	
+	// Sending data to execution calculation method 1 - SetByCaller
 	Damage += FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f);
 
 	float UnmitigatedDamage = Damage; // Can multiply any damage boosters here
