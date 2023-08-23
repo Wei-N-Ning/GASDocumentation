@@ -134,6 +134,10 @@ protected:
 	TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
 	// Grant abilities on the Server. The Ability Specs will be replicated to the owning client.
+	// We grant GameplayAbilities on the server which then automatically replicates the GameplayAbilitySpec to the owning
+	// client. Other clients / simulated proxies do not receive the GameplayAbilitySpec.
+	// The Sample Project stores a TArray<TSubclassOf<UGDGameplayAbility>> on the Character class that it reads from and
+	// grants when the game starts:
 	virtual void AddCharacterAbilities();
 
 	// Initialize the Character's attributes. Must run on Server but we run it on Client too

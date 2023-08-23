@@ -281,8 +281,16 @@ void AGDCharacterBase::AddCharacterAbilities()
 
 	for (TSubclassOf<UGDGameplayAbility>& StartupAbility : CharacterAbilities)
 	{
+		// When granting these GameplayAbilities, we're creating GameplayAbilitySpecs with the UGameplayAbility class, the
+		// ability level, the input that it is bound to, and the SourceObject or who gave this GameplayAbility to this ASC.
 		AbilitySystemComponent->GiveAbility(
-			FGameplayAbilitySpec(StartupAbility, GetAbilityLevel(StartupAbility.GetDefaultObject()->AbilityID), static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
+			FGameplayAbilitySpec(
+				StartupAbility,
+				GetAbilityLevel(StartupAbility.GetDefaultObject()->AbilityID),
+				static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID),
+				this
+			)
+		);
 	}
 
 	AbilitySystemComponent->bCharacterAbilitiesGiven = true;

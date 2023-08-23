@@ -8,6 +8,29 @@
 #include "GDGameplayAbility.generated.h"
 
 /**
+ * The ASC provides four other methods of activating GameplayAbilities:
+ * by
+ * GameplayTag,
+ * GameplayAbility class,
+ * GameplayAbilitySpec handle,
+ * an event.
+ * Activating a GameplayAbility by event allows you to pass in a payload of data with the event.
+ *
+*   UFUNCTION(BlueprintCallable, Category = "Abilities")
+	bool TryActivateAbilitiesByTag(const FGameplayTagContainer& GameplayTagContainer, bool bAllowRemoteActivation = true);
+
+	UFUNCTION(BlueprintCallable, Category = "Abilities")
+	bool TryActivateAbilityByClass(TSubclassOf<UGameplayAbility> InAbilityToActivate, bool bAllowRemoteActivation = true);
+
+	bool TryActivateAbility(FGameplayAbilitySpecHandle AbilityToActivate, bool bAllowRemoteActivation = true);
+
+	bool TriggerAbilityFromGameplayEvent(FGameplayAbilitySpecHandle AbilityToTrigger, FGameplayAbilityActorInfo* ActorInfo, FGameplayTag Tag, const FGameplayEventData* Payload, UAbilitySystemComponent& Component);
+
+	FGameplayAbilitySpecHandle GiveAbilityAndActivateOnce(const FGameplayAbilitySpec& AbilitySpec, const FGameplayEventData* GameplayEventData);
+
+ * Note: When activating a GameplayAbility from event in Blueprint, you must use the ActivateAbilityFromEvent node and
+ * the standard ActivateAbility node cannot exist in your graph. If the ActivateAbility node exists, it will always be
+ * called over the ActivateAbilityFromEvent node.
  * 
  */
 UCLASS()
@@ -33,5 +56,16 @@ public:
 
 	// If an ability is marked as 'ActivateAbilityOnGranted', activate them immediately when given here
 	// Epic's comment: Projects may want to initiate passives or do other "BeginPlay" type of logic here.
+	// 
+	// To implement passive GameplayAbilities that automatically activate and run continuously, override
+	// UGameplayAbility::OnAvatarSet() which is automatically called when a GameplayAbility is granted and the AvatarActor
+	// is set and call TryActivateAbility().
+	//
+	// I recommend adding a bool to your custom UGameplayAbility class specifying if the GameplayAbility should be activated
+	// when granted. The Sample Project does this for its passive armor stacking ability.
+	// (see the pass armor BP which subclasses this class and sets ActivateAbilityOnGranted to True)
+	// Passive GameplayAbilities will typically have a Net Execution Policy of Server Only.
+	//
+	// Epic describes this function as the correct place to initiate passive abilities and to do BeginPlay type things.
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 };

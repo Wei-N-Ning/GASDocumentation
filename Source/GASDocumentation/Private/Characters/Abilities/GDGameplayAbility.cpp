@@ -19,6 +19,8 @@ void UGDGameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo * ActorInfo
 {
 	Super::OnAvatarSet(ActorInfo, Spec);
 
+	// See pass armor BP which subclasses this UGDGameplayAbility;
+	// it sets ActivateAbilityOnGranted to True, therefore it's a passive ability granted on spawn.
 	if (ActivateAbilityOnGranted)
 	{
 		ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle, false);
