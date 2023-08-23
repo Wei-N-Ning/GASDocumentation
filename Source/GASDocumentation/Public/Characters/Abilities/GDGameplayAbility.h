@@ -68,4 +68,8 @@ public:
 	//
 	// Epic describes this function as the correct place to initiate passive abilities and to do BeginPlay type things.
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+
+	// to observe the execution of CanActivateAbility, uncomment this function
+	// virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
+	
 };

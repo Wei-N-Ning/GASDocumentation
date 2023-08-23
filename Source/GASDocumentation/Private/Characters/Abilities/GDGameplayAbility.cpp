@@ -26,3 +26,12 @@ void UGDGameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo * ActorInfo
 		ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle, false);
 	}
 }
+
+// bool UGDGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
+// 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+// 	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+// {
+// 	auto val = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("CanActivateAbility %s: %s"), *GetName(), val ? TEXT("true") : TEXT("false")));
+// 	return val;
+// }
