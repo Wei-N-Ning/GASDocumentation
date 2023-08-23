@@ -44,7 +44,7 @@ UGDDamageExecCalculation::UGDDamageExecCalculation()
 	// Sending data to execution calculation method 3
 	// Hardcode values to a GE (similar to method 2)
 	// The Temporary Variable is associated with a GameplayTag.
-	ValidTransientAggregatorIdentifiers.AddTag(FGameplayTag::RequestGameplayTag("Data.UberDamage"));
+	ValidTransientAggregatorIdentifiers.AddTag(FGameplayTag::RequestGameplayTag("State.Debuff.Stun"));
 }
 
 void UGDDamageExecCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters & ExecutionParams, OUT FGameplayEffectCustomExecutionOutput & OutExecutionOutput) const
@@ -78,6 +78,13 @@ void UGDDamageExecCalculation::Execute_Implementation(const FGameplayEffectCusto
 	
 	// Add SetByCaller damage if it exists
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DamageDef, EvaluationParameters, Damage);
+
+	// Good read:
+	// Breaking down the damage formula
+	// https://dev.epicgames.com/community/learning/tutorials/JG2a/unreal-engine-gas-customize-modifier-aggregation-with-mod-evaluation-channels
+	float DamageTemp = 0.0f;
+	ExecutionParams.AttemptCalculateTransientAggregatorMagnitude(FGameplayTag::RequestGameplayTag("State.Debuff.Stun"), EvaluationParameters, DamageTemp);
+	Damage += DamageTemp;
 	
 	// Sending data to execution calculation method 1 - SetByCaller
 	Damage += FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f);
